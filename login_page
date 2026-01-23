@@ -1,0 +1,96 @@
+import React from "react";
+
+export default function App() {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert("Login Successful 🚨 Redirect to Scam Dashboard");
+  };
+
+  return (
+    <div style={styles.container}>
+      <div style={styles.card}>
+        <h2 style={styles.title}>Scam Detection Alert</h2>
+        <p style={styles.subtitle}>Secure Login</p>
+
+        <form onSubmit={handleSubmit}>
+          <input
+            type="email"
+            placeholder="Email Address"
+            required
+            style={styles.input}
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            required
+            style={styles.input}
+          />
+
+          <button type="submit" style={styles.button}>
+            Login
+          </button>
+        </form>
+
+        <p style={styles.footer}>
+          New user? <span style={styles.link}>Create Account</span>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+const styles = {
+  container: {
+    height: "100vh",
+    background: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    fontFamily: "Segoe UI, sans-serif"
+  },
+  card: {
+    background: "#fff",
+    padding: "35px",
+    width: "320px",
+    borderRadius: "10px",
+    textAlign: "center",
+    boxShadow: "0 10px 25px rgba(0,0,0,0.3)"
+  },
+  title: {
+    marginBottom: "5px",
+    color: "#203a43"
+  },
+  subtitle: {
+    fontSize: "14px",
+    color: "gray",
+    marginBottom: "20px"
+  },
+  input: {
+    width: "100%",
+    padding: "10px",
+    marginBottom: "15px",
+    borderRadius: "5px",
+    border: "1px solid #ccc",
+    fontSize: "14px"
+  },
+  button: {
+    width: "100%",
+    padding: "10px",
+    background: "#203a43",
+    color: "white",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    fontSize: "15px"
+  },
+  footer: {
+    marginTop: "15px",
+    fontSize: "13px"
+  },
+  link: {
+    color: "#203a43",
+    fontWeight: "bold",
+    cursor: "pointer"
+  }
+};
