@@ -1,40 +1,55 @@
 import React from "react";
 
 export default function App() {
-  const handleSubmit = (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    alert("Login Successful 🚨 Redirect to Scam Dashboard");
+    alert("Login Successful 🚨 Redirecting to Home Page");
   };
 
   return (
     <div style={styles.container}>
-      <div style={styles.card}>
-        <h2 style={styles.title}>Scam Detection Alert</h2>
-        <p style={styles.subtitle}>Secure Login</p>
+      {/* Navbar */}
+      <div style={styles.navbar}>
+        <h2 style={styles.logo}>Scam Detection Alert</h2>
+      </div>
 
-        <form onSubmit={handleSubmit}>
-          <input
-            type="email"
-            placeholder="Email Address"
-            required
-            style={styles.input}
-          />
+      {/* Login Card */}
+      <div style={styles.loginWrapper}>
+        <div style={styles.card}>
+          <h2 style={styles.title}>Secure Login</h2>
+          <p style={styles.subtitle}>
+            Access AI-powered Scam Detection System
+          </p>
 
-          <input
-            type="password"
-            placeholder="Password"
-            required
-            style={styles.input}
-          />
+          <form onSubmit={handleLogin}>
+            <input
+              type="email"
+              placeholder="Email Address"
+              required
+              style={styles.input}
+            />
 
-          <button type="submit" style={styles.button}>
-            Login
-          </button>
-        </form>
+            <input
+              type="password"
+              placeholder="Password"
+              required
+              style={styles.input}
+            />
 
-        <p style={styles.footer}>
-          New user? <span style={styles.link}>Create Account</span>
-        </p>
+            <button type="submit" style={styles.loginBtn}>
+              Login
+            </button>
+          </form>
+
+          <p style={styles.footerText}>
+            New user? <span style={styles.link}>Create Account</span>
+          </p>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div style={styles.footer}>
+        © 2026 Scam Detection Alert | Stay Safe Online
       </div>
     </div>
   );
@@ -42,29 +57,42 @@ export default function App() {
 
 const styles = {
   container: {
-    height: "100vh",
+    minHeight: "100vh",
+    fontFamily: "Segoe UI, sans-serif",
     background: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)",
+    color: "white",
+    display: "flex",
+    flexDirection: "column"
+  },
+  navbar: {
+    padding: "15px 30px",
+    background: "rgba(0,0,0,0.3)"
+  },
+  logo: {
+    margin: 0
+  },
+  loginWrapper: {
+    flex: 1,
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
-    fontFamily: "Segoe UI, sans-serif"
+    alignItems: "center"
   },
   card: {
-    background: "#fff",
+    background: "#ffffff",
+    color: "#203a43",
     padding: "35px",
-    width: "320px",
-    borderRadius: "10px",
+    width: "340px",
+    borderRadius: "12px",
     textAlign: "center",
-    boxShadow: "0 10px 25px rgba(0,0,0,0.3)"
+    boxShadow: "0 10px 30px rgba(0,0,0,0.35)"
   },
   title: {
-    marginBottom: "5px",
-    color: "#203a43"
+    marginBottom: "5px"
   },
   subtitle: {
     fontSize: "14px",
     color: "gray",
-    marginBottom: "20px"
+    marginBottom: "25px"
   },
   input: {
     width: "100%",
@@ -74,23 +102,30 @@ const styles = {
     border: "1px solid #ccc",
     fontSize: "14px"
   },
-  button: {
+  loginBtn: {
     width: "100%",
     padding: "10px",
-    background: "#203a43",
+    background: "#ff4d4d",
     color: "white",
     border: "none",
     borderRadius: "5px",
     cursor: "pointer",
-    fontSize: "15px"
+    fontSize: "15px",
+    fontWeight: "bold"
   },
-  footer: {
+  footerText: {
     marginTop: "15px",
     fontSize: "13px"
   },
   link: {
-    color: "#203a43",
+    color: "#ff4d4d",
     fontWeight: "bold",
     cursor: "pointer"
+  },
+  footer: {
+    textAlign: "center",
+    padding: "15px",
+    fontSize: "13px",
+    background: "rgba(0,0,0,0.4)"
   }
 };
