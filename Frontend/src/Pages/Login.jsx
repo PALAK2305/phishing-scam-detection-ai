@@ -1,45 +1,71 @@
-import React from "react";
-import "./App.css";
+import React, { useState } from 'react';
 
-const Login = () => {
-  const handleLogin = (e) => {
+const Login = ({ onNavigate, onLogin }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    alert("Login successful! Redirecting to dashboard...");
+    // Mock login - in real app would validate with backend
+    if (email && password) {
+      onLogin({ email, name: email.split('@')[0] });
+    }
   };
 
   return (
-    <>
-      {/* Navbar */}
-      <div className="navbar">
-        <div className="logo">🛡️ Scam Detection Alert</div>
-      </div>
+    <div className="auth-page">
+      <button className="back-link" onClick={() => onNavigate('landing')}>
+        ← Back to home
+      </button>
+      
+      <div className="auth-card">
+        <div className="auth-header">
+          <div className="logo">
+            <span className="logo-icon">🛡️</span>
+            ScamGuard
+          </div>
+          <h1>Welcome back!</h1>
+          <p>Log in to continue protecting yourself</p>
+        </div>
 
-      {/* Login Section */}
-      <div className="center-wrapper">
-        <div className="card">
-          <h2>Secure Login</h2>
-          <p className="subtitle">
-            Access AI-powered Scam & Phishing Detection
-          </p>
-
-          <form onSubmit={handleLogin}>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Email address</label>
             <input
               type="email"
-              placeholder="Email Address"
+              className="form-input"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
+          </div>
 
+          <div className="form-group">
+            <label>Password</label>
             <input
               type="password"
-              placeholder="Password"
+              className="form-input"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
+          </div>
 
-            <button type="submit">Login</button>
-          </form>
+          <button type="submit" className="btn btn-primary">
+            Log In →
+          </button>
+        </form>
+
+        <div className="auth-footer">
+          Don't have an account?{' '}
+          <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('signup'); }}>
+            Sign up free
+          </a>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
