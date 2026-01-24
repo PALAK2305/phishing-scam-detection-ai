@@ -1,20 +1,40 @@
 import React, { useState } from 'react';
-import './app.css';
-const Login = ({ onNavigate, onLogin }) => {
+import { useNavigate, Link } from 'react-router-dom';
+import "./app.css";
+
+const Login = ({ setUser }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Mock login - in real app would validate with backend
-    if (email && password) {
-      onLogin({ email, name: email.split('@')[0] });
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  try {
+    const response = await fetch('http://localhost:5000/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      // Use the name returned from the backend if available
+      if (setUser) setUser({ email, name: data.name || email.split('@')[0] });
+      navigate('/dashboard');
+    } else {
+      alert(data.message || "Login failed");
     }
-  };
+  } catch (error) {
+    console.error("Login error:", error);
+    alert("Could not connect to server");
+  }
+};
 
   return (
     <div className="auth-page">
-      <button className="back-link" onClick={() => onNavigate('landing')}>
+      <button className="back-link" onClick={() => navigate('/')}>
         ← Back to home
       </button>
       
@@ -60,9 +80,7 @@ const Login = ({ onNavigate, onLogin }) => {
 
         <div className="auth-footer">
           Don't have an account?{' '}
-          <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('signup'); }}>
-            Sign up free
-          </a>
+          <Link to="/signup">Sign up free</Link>
         </div>
       </div>
     </div>

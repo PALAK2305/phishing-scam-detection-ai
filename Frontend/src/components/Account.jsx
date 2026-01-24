@@ -1,5 +1,5 @@
 import React from 'react';
-
+import "../Pages/app.css";
 const Account = ({ user, history, onLogout }) => {
   const safeCount = history.filter(h => h.status === 'safe').length;
   const scamCount = history.filter(h => h.status === 'scam').length;

@@ -1,147 +1,105 @@
-import React from "react";
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import './app.css';
 
-export default function App() {
-  const handleSignup = (e) => {
-    e.preventDefault();
-    alert("Account Created Successfully 🚀 Redirecting to Login");
-  };
+const Signup = ({ setUser }) => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+  
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  try {
+    const response = await fetch('http://localhost:5000/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      if (setUser) setUser({ email, name });
+      navigate('/dashboard');
+    } else {
+      alert(data.message || "Registration failed");
+    }
+  } catch (error) {
+    console.error("Signup error:", error);
+    alert("Could not connect to server");
+  }
+};
 
   return (
-    <div style={styles.container}>
-      {/* Navbar */}
-      <div style={styles.navbar}>
-        <h2 style={styles.logo}>Scam Detection Alert</h2>
-      </div>
+    <div className="auth-page">
+      {/* Changed onNavigate to navigate('/') */}
+      <button className="back-link" onClick={() => navigate('/')}>
+        ← Back to home
+      </button>
+      
+      <div className="auth-card">
+        <div className="auth-header">
+          <div className="logo">
+            <span className="logo-icon">🛡️</span>
+            ScamGuard
+          </div>
+          <h1>Create your account</h1>
+          <p>Start detecting scams in seconds</p>
+        </div>
 
-      {/* Signup Card */}
-      <div style={styles.signupWrapper}>
-        <div style={styles.card}>
-          <h2 style={styles.title}>Create Account</h2>
-          <p style={styles.subtitle}>
-            Join our AI-powered Scam Detection Platform
-          </p>
-
-          <form onSubmit={handleSignup}>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Full name</label>
             <input
               type="text"
-              placeholder="Full Name"
+              className="form-input"
+              placeholder="John Doe"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               required
-              style={styles.input}
             />
+          </div>
 
+          <div className="form-group">
+            <label>Email address</label>
             <input
               type="email"
-              placeholder="Email Address"
+              className="form-input"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
-              style={styles.input}
             />
+          </div>
 
+          <div className="form-group">
+            <label>Password</label>
             <input
               type="password"
-              placeholder="Password"
+              className="form-input"
+              placeholder="Min. 8 characters"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              minLength={8}
               required
-              style={styles.input}
             />
+          </div>
 
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              required
-              style={styles.input}
-            />
+          <button type="submit" className="btn btn-primary">
+            Create Account 🚀
+          </button>
+        </form>
 
-            <button type="submit" style={styles.signupBtn}>
-              Sign Up
-            </button>
-          </form>
-
-          <p style={styles.footerText}>
-            Already have an account?{" "}
-            <span style={styles.link}>Login</span>
-          </p>
+        <div className="auth-footer">
+          Already have an account?{' '}
+          {/* Replaced <a> tag with <Link> for better performance */}
+          <Link to="/login">Log in</Link>
         </div>
-      </div>
-
-      {/* Footer */}
-      <div style={styles.footer}>
-        © 2026 Scam Detection Alert | Stay Safe Online
       </div>
     </div>
   );
-}
-
-const styles = {
-  container: {
-    minHeight: "100vh",
-    fontFamily: "Segoe UI, sans-serif",
-    background: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)",
-    color: "white",
-    display: "flex",
-    flexDirection: "column"
-  },
-  navbar: {
-    padding: "15px 30px",
-    background: "rgba(0,0,0,0.3)"
-  },
-  logo: {
-    margin: 0
-  },
-  signupWrapper: {
-    flex: 1,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  card: {
-    background: "#ffffff",
-    color: "#203a43",
-    padding: "35px",
-    width: "360px",
-    borderRadius: "12px",
-    textAlign: "center",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.35)"
-  },
-  title: {
-    marginBottom: "5px"
-  },
-  subtitle: {
-    fontSize: "14px",
-    color: "gray",
-    marginBottom: "25px"
-  },
-  input: {
-    width: "100%",
-    padding: "10px",
-    marginBottom: "15px",
-    borderRadius: "5px",
-    border: "1px solid #ccc",
-    fontSize: "14px"
-  },
-  signupBtn: {
-    width: "100%",
-    padding: "10px",
-    background: "#00e6e6",
-    color: "#003333",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    fontSize: "15px",
-    fontWeight: "bold"
-  },
-  footerText: {
-    marginTop: "15px",
-    fontSize: "13px"
-  },
-  link: {
-    color: "#00b3b3",
-    fontWeight: "bold",
-    cursor: "pointer"
-  },
-  footer: {
-    textAlign: "center",
-    padding: "15px",
-    fontSize: "13px",
-    background: "rgba(0,0,0,0.4)"
-  }
 };
+
+export default Signup;
