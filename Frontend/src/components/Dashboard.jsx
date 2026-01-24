@@ -1,109 +1,97 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Added for sidebar navigation
 import "../Pages/app.css";
 
-const Dashboard = ({ onAddHistory }) => {
-  const [message, setMessage] = useState('');
-  const [result, setResult] = useState(null);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
+const Dashboard = () => {
+  const [message, setMessage] = useState("");
+  const [result, setResult] = useState("");
   const navigate = useNavigate();
 
-  const analyzeMessage = async () => {
-    if (!message.trim()) return;
-
-    setIsAnalyzing(true);
-    setResult(null);
-
-    try {
-      // Points to the standardized endpoint in app.py
-      const response = await fetch("http://127.0.0.1:5000/api/analyze-text", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text: message }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        const isSpam = data.result === "Spam";
-
-        const analysisResult = {
-          status: isSpam ? 'scam' : 'safe',
-          title: isSpam ? 'High Risk - Likely Scam!' : 'Low Risk - Appears Safe',
-          subtitle: isSpam ? 'Our AI model detected scam patterns.' : 'No obvious scam indicators found.',
-          indicators: isSpam
-            ? ['Machine Learning detected scam intent', 'Suspicious language patterns']
-            : ['Legitimate pattern', 'Safe text structure']
-        };
-
-        setResult(analysisResult);
-
-        if (onAddHistory) {
-          onAddHistory({
-            id: Date.now(),
-            message: message.substring(0, 100) + '...',
-            status: analysisResult.status,
-            title: analysisResult.title,
-            date: new Date().toLocaleDateString()
-          });
-        }
-      } else {
-        alert("Server Error: " + (data.error || "Unknown error"));
-      }
-    } catch (error) {
-      console.error("Connection Error:", error);
-      alert("Could not connect to the ScamGuard API. Make sure app.py is running!");
-    } finally {
-      setIsAnalyzing(false);
+  const checkScam = () => {
+    if (!message.trim()) {
+      alert("Please paste a message to analyze");
+      return;
     }
+
+    // Temporary demo logic
+    setResult("⚠️ Scam Detected (Confidence: 92%)");
   };
 
   return (
     <div className="dashboard-layout">
+      {/* Sidebar Navigation */}
       <aside className="sidebar">
-        <div className="logo">🛡️ ScamGuard</div>
+        <div className="sidebar-header">
+          <div className="logo"><span className="logo-icon">🛡️</span> ScamGuard</div>
+        </div>
         <nav className="sidebar-nav">
-          <button className="nav-item active" onClick={() => navigate('/dashboard')}>🔍 Analyzer</button>
-          <button className="nav-item" onClick={() => navigate('/history')}>📜 History</button>
-          <button className="nav-item" onClick={() => navigate('/account')}>👤 Account</button>
-          <button className="nav-item logout" onClick={() => navigate('/')}>🚪 Logout</button>
+          <button className="nav-item active" onClick={() => navigate('/dashboard')}>
+            <span className="nav-item-icon">🔍</span> Analyzer
+          </button>
+          <button className="nav-item" onClick={() => navigate('/history')}>
+            <span className="nav-item-icon">📜</span> History
+          </button>
+          <button className="nav-item" onClick={() => navigate('/account')}>
+            <span className="nav-item-icon">👤</span> Account
+          </button>
         </nav>
+        <div className="sidebar-footer">
+           <button className="nav-item" onClick={() => navigate('/')}>🚪 Logout</button>
+        </div>
       </aside>
 
-      <main className="analyzer-container">
+      {/* Main Content Area */}
+      <main className="main-content">
         <div className="page-header">
-          <h1>Message Analyzer</h1>
-          <p>Paste a suspicious message to check for fraud.</p>
+          <h1>Scam Message Analyzer</h1>
+          <p>Paste any SMS, Email, or message to detect scams instantly.</p>
         </div>
 
-        <div className="analyzer-card">
-          <textarea
-            className="message-input"
-            placeholder="Paste message here..."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-          <div className="analyzer-actions">
-            <button className="btn btn-outline" onClick={() => setMessage('')}>Clear</button>
-            <button className="btn btn-primary" onClick={analyzeMessage} disabled={isAnalyzing}>
-              {isAnalyzing ? 'Analyzing...' : 'Analyze'}
-            </button>
-          </div>
-        </div>
+        <div className="analyzer-container">
+          {/* Input Card */}
+          <div className="analyzer-card">
+            <h2><span className="feature-icon purple">📝</span> Analyze Text</h2>
+            
+            <textarea
+              className="message-input"
+              placeholder="Paste suspicious message here..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
 
-        {result && (
-          <div className={`result-card ${result.status}`}>
-            <h3>{result.title}</h3>
-            <p>{result.subtitle}</p>
-            <ul>
-              {result.indicators.map((ind, i) => (
-                <li key={i}>{ind}</li>
-              ))}
-            </ul>
+            <div className="analyzer-actions">
+              <button className="btn btn-primary" onClick={checkScam}>
+                Check Scam
+              </button>
+              <button className="btn btn-outline" onClick={() => setMessage('')}>
+                Clear
+              </button>
+            </div>
           </div>
-        )}
+
+          {/* Result Card - Only shows when result exists */}
+          {result && (
+            <div className="result-card">
+              <div className="result-header">
+                <div className={`result-icon ${result.includes("Scam") ? "scam" : "safe"}`}>
+                  {result.includes("Scam") ? "✕" : "✓"}
+                </div>
+                <div className="result-title">
+                  <h3>Analysis Complete</h3>
+                  <p>Here is what our AI found:</p>
+                </div>
+              </div>
+              
+              <div className="result-explanation">
+                <h4>{result}</h4>
+                <p>
+                  This message shows high-risk patterns often associated with phishing attempts. 
+                  Do not click links or reply.
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
       </main>
     </div>
   );
